@@ -15,15 +15,15 @@ import Protected from './Protected';
 import ProfileSettings from './ProfileSettings';
 
 function NavbarComp() {
-  let user = JSON.parse(localStorage.getItem('user-info'))
+  let user = JSON.parse(sessionStorage.getItem('user'))
   console.log("[From Header]User:", user)
   const history = useHistory();
 
   function logOut() {
-    localStorage.clear();
-    this.history.push("/signup");
+    sessionStorage.clear();
+    history.push("/signup");
   }
-
+  
   return (
     <Router>
       <Navbar bg="light" expand="lg">
@@ -33,7 +33,7 @@ function NavbarComp() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               {
-                localStorage.getItem('user-info') ?
+                sessionStorage.getItem('user') ?
                   <>
                     <Nav.Link as={Link} to={"/profile"}>Profile</Nav.Link>
 
@@ -44,7 +44,7 @@ function NavbarComp() {
                     <Nav.Link as={Link} to={"/login"}>Login</Nav.Link>
                   </>
               }
-              {localStorage.getItem('user-info') ?
+              {sessionStorage.getItem('user') ?
                 <NavDropdown title="Account Settings" id="basic-nav-dropdown">
                   <NavDropdown.Item as={Link} to={"/profilesettings"}>Profile Settings</NavDropdown.Item>
 

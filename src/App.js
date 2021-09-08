@@ -6,7 +6,7 @@ function App() {
   return (
     <div >
       <NavbarComp/>
-      <h1>App.js</h1>
+      
       {/* <Todo /> */}
     </div>
   );

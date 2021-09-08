@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
-
+import JSONPretty from 'react-json-pretty'
 
 
 function ProfileSettings(){
-    let user = localStorage.getItem('user-info')
+    const user = sessionStorage.getItem('user')
+    
     return (
         <div>
             <h1>Profile Settings</h1>
-            <h3>{user}</h3>
+            
+            <JSONPretty data={user} />
 
 
         </div>

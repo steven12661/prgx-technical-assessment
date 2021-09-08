@@ -6,7 +6,7 @@ function Protected(props){
     const history = useHistory();
 
     //  useEffect(() => {
-    //      if(localStorage.getItem('user-info'))
+    //      if(localStorage.getItem('user'))
     //      {
     //        history.push("/signup")
     //      }

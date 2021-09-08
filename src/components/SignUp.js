@@ -6,7 +6,7 @@ function SignUp() {
   const history = useHistory();
 
     useEffect(() => {
-      if(localStorage.getItem('user-info'))
+      if(sessionStorage.getItem('user'))
       {
         this.history.push("/todo")
       }
@@ -30,10 +30,10 @@ function SignUp() {
 
      })
      result = await result.json()
-     localStorage.setItem("user-info", JSON.stringify(result))
+     sessionStorage.setItem("user", JSON.stringify(result))
      console.log("result: ", result)
      history.push("/todo")
-     console.log(history.push("History PUSHED","/todo"))
+     console.log(history.push("history pushed:","/todo"))
   }
 
   return (
