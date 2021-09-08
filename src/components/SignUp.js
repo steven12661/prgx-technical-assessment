@@ -1,8 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
-
+import {useHistory, withRouter} from 'react-router-dom'
 
 function SignUp() {
+  const history = useHistory();
+
+  //  useEffect(() => {
+  //    if(localStorage.getItem('user-info'))
+  //    {
+  //      history.push("/todo")
+  //    }
+  //  }, )
+
+
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [email, setEmail] = useState("");
@@ -20,7 +30,10 @@ function SignUp() {
 
      })
      result = await result.json()
+     localStorage.setItem("user-info", JSON.stringify(result))
      console.log("result: ", result)
+     history.push("/todo")
+     console.log(history.push("History PUSHED","/todo"))
   }
 
   return (
@@ -28,7 +41,7 @@ function SignUp() {
       <Form>
         <Form.Group className="mb-3" controlId="formBasicName">
           <Form.Label>Name</Form.Label>
-          <Form.Control type="name" value={name} onChange={(e)=>setName(e.target.value)} placeholder="John Doe" />
+          <Form.Control type="name" value={name} onChange={(e)=>setName(e.target.value)} placeholder="Your name" />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicAge">
@@ -44,8 +57,8 @@ function SignUp() {
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Password" />
+          <Form.Text className="text-muted">Must be 8 characters long</Form.Text>
         </Form.Group>
-
 
         <Button variant="success" onClick={register}>
           SIGN UP

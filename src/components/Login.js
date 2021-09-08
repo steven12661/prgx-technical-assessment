@@ -1,11 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 // import "./Login.css";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link, useHistory } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const history = useHistory();
+
+
+  //  useEffect(() => {
+  //    if(localStorage.getItem('user-info'))
+  //    {
+  //      history.push("/todo")
+  //    }
+  //  }, )
+
 
   async function login() {
     let item = { email, password };
@@ -21,6 +31,7 @@ function Login() {
       }
     );
     result = await result.json();
+    localStorage.setItem("user-info", JSON.stringify(result))
     console.log("result: ", result);
   }
 
@@ -45,13 +56,16 @@ function Login() {
             placeholder="Password"
           />
         </Form.Group>
-        <Button variant="success" onClick={login}>
-          Login
-        </Button>{" "}
+        <Link to="/todo">
+
+          <Button variant="success" onClick={login} type="submit">
+            LOGIN
+          </Button>{" "}
+        </Link>
 
         <Link to="/signup">
           <Button variant="success">
-            Sign Up
+            SIGN UP
           </Button>
         </Link>
 
