@@ -1,8 +1,22 @@
-import React, {useState, useEffect} from 'react'
-import { DataGrid } from '@material-ui/data-grid'
-import './table.css'
+import React, { useState, useEffect } from 'react'
+import MaterialTable from 'material-table'
+function Todo() {
+    const columns = [
+        // { field: 'check', title: 'Check'},
+        { field: 'description', title: 'Description' },
+        { field: 'completed', title: 'Completed' },
+        { field: 'created', title: 'Created at', type: 'date' },
+        { field: 'updated', title: 'Updated at' },
 
-const Todo = () =>{
+    ];
+
+    const data = [
+        { description: 'test a', completed: 'false', created: 'Aug 07 2021', updated: 'Aug 08 2021' },
+        { description: 'test', completed: 'true', created: 'Aug 06 2021', updated: 'Aug 07 2021' },
+        { description: 'test', completed: 'true', created: 'Aug 05 2021', updated: 'Aug 06 2021' },
+        { description: 'test', completed: 'false', created: 'Aug 04 2021', updated: 'Aug 05 2021' }
+
+    ];
 
     // const[tableData, setTableData] = useState([])
     // useEffect(() => {
@@ -14,36 +28,34 @@ const Todo = () =>{
     //     .then((data)=>console.log(data))
 
     // })
-    // const [description, setDescription] = useState(data);
-    return (
-            <div>
-                <table className="data-table">
-                    <thead>
-                        <tr>
-                            <th className="th "> Check </th>
-                            <th className="th "> Description </th>
-                            <th className="th "> Completed </th>
-                            <th className="th "> Created at </th>
-                            <th className="th "> Updated at </th>
-                            <th className="th "> Actions </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {}
-                        <tr>
-                            <td className="td">a</td>
-                            <td className="td">test</td>
-                            <td className="td">false</td>
-                            <td className="td">December 10, 1815</td>
-                            <td className="td">December 10, 1815</td>
-                            <td className="td">a</td>
-                        </tr>
-                    </tbody>
-                </table>
 
-            </div>
-        )
-    
+    return (
+        <div>
+            <MaterialTable
+                columns={columns}
+                data={data}
+                title="Actions"
+                actions={[
+                    {
+                        icon: 'edit',
+                        tooltip: 'edit task',
+                        onClick: (event, rowData) => alert("Ready to edit")
+
+                                            
+                    },
+                    {
+                        icon: 'delete',
+                        tooltip: 'Delete task',
+                        onClick: (event, rowData) => alert("Ready to delete")
+                    }
+                ]}
+                options={{
+                    actionsColumnIndex: -1
+                }}
+            />
+        </div >
+    )
+
 }
 
 export default Todo

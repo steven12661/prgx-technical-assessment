@@ -5,12 +5,12 @@ import {useHistory, withRouter} from 'react-router-dom'
 function SignUp() {
   const history = useHistory();
 
-  //  useEffect(() => {
-  //    if(localStorage.getItem('user-info'))
-  //    {
-  //      history.push("/todo")
-  //    }
-  //  }, )
+    useEffect(() => {
+      if(localStorage.getItem('user-info'))
+      {
+        this.history.push("/todo")
+      }
+    }, )
 
 
   const [name, setName] = useState("");
