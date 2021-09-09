@@ -16,6 +16,7 @@ const columns = [
 
 const taskUrl = "https://api-nodejs-todolist.herokuapp.com/task"
 const putUrl = "https://api-nodejs-todolist.herokuapp.com/task/"
+const deleteUrl = "https://api-nodejs-todolist.herokuapp.com/task/"
 const useStyles = makeStyles((theme) => ({
     modal: {
         position: 'absolute',
@@ -38,18 +39,21 @@ const useStyles = makeStyles((theme) => ({
 function Todo() {
 
     const token = getToken();
-        // if (!token) {
+    // if (!token) {
     //     return;
     // }
     const [data, setData] = useState([]);
     const styles = useStyles();
     const [modalInsertar, setModalInsertar] = useState(false);
     const [modalEditar, setModalEditar] = useState(false);
+    const [modalEliminar, setModalEliminar] = useState(false);
+
     const [selectedTask, setSelectedTask] = useState({
         description: "",
         completed: "",
         createdAt: "",
-        updatedAt: ""
+        updatedAt: "",
+        _id: ""
     })
     const [taskList, setTaskList] = useState([]);
     const handleChange = e => {
@@ -68,37 +72,73 @@ function Todo() {
         setModalEditar(!modalEditar)
     }
 
-    const selectTask=(description, caso)=>{
-        setSelectedTask(description);
-        (caso==="Edit")&&abrirCerrarModalEditar()
+    const abrirCerrarModalEliminar = () => {
+        setModalEliminar(!modalEliminar);
     }
 
-    const peticionPost=async()=>{
+    const selectTask = (task, caso) => {
+        setSelectedTask(task);
+        (caso === "Edit") ? abrirCerrarModalEditar()
+            :
+            abrirCerrarModalEliminar()
+    }
+
+    const peticionPost = async () => {
         await axios.post(taskUrl, selectedTask, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
-        .then(response=>{
-            setData(data.concat(response.data))
-            abrirCerrarModalInsertar();
-        }).catch(error=>{
-            console.log(error);
-        })
+            .then(response => {
+                setData(data.concat(response.data));
+                abrirCerrarModalInsertar();
+            }).catch(error => {
+                console.log(error);
+            })
     }
 
-    const peticionPut=async()=>{
-        await axios.put(putUrl, selectedTask._id, {
+    const peticionPut = async () => {
+        var body = {
+            'completed': (selectedTask.completed.toLowerCase() === 'true')
+        }
+        await axios.put(putUrl + selectedTask._id, body, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
-        .then(response=>{
-            setData(data.concat(response.data))
-            abrirCerrarModalInsertar();
-        }).catch(error=>{
-            console.log(error);
-        })
+            .then(response => {
+                // var dataNueva = data;
+                // dataNueva.map(task => {
+                //     if (task._id === selectedTask._id) {
+                //         task.task = selectTask.task;
+
+                //         task.description = selectedTask.description;
+                //         task.completed = (selectedTask.completed.toLowerCase() === 'true');
+                //         task.createdAt = selectedTask.createdAt;
+                //         task.updatedAt = selectedTask.updatedAt;
+                //     }
+                // });
+                // setData(dataNueva);
+                abrirCerrarModalEditar();
+                peticionGet();
+            }).catch(error => {
+                console.log(error);
+            })
+    }
+
+
+    const peticionDelete = async () => {
+        await axios.delete(deleteUrl + selectedTask._id, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+
+        }).then(response => {
+                setData(taskList.data.filter(task => task._id !== selectedTask._id));
+                abrirCerrarModalEliminar();
+            }).catch(error => {
+                console.log(error);
+            })
     }
 
     const peticionGet = async () => {
@@ -109,7 +149,7 @@ function Todo() {
         })
             .then(response => {
                 setTaskList(response.data)
-                console.log("Tasklist:",taskList.data)
+                console.log("Tasklist:", taskList.data)
             })
     }
     useEffect(() => {
@@ -129,7 +169,7 @@ function Todo() {
             <TextField className={styles.inputMaterial} label="Updated" name="updatedAt" onChange={handleChange} />
             <br /><br />
             <div align="right">
-                <Button color="primary" onClick={()=>peticionPost()} >ADD</Button>
+                <Button color="primary" onClick={() => peticionPost()} >ADD</Button>
                 <Button onClick={() => abrirCerrarModalInsertar()}>Cancel</Button>
             </div>
         </div>
@@ -137,19 +177,31 @@ function Todo() {
 
     const bodyEditar = (
         <div className={styles.modal}>
-            <h3>Edit Task</h3>
-            <TextField className={styles.inputMaterial} label="Description" name="description" onChange={handleChange} value={selectedTask&&selectedTask.description} />
+            <h3>Edit Task</h3><small>(you can only edit completed field)</small>
+            
+            <TextField className={styles.inputMaterial} label="Description" name="description" onChange={handleChange} value={selectedTask && selectedTask.description} />
             <br />
-            <TextField className={styles.inputMaterial} label="Completed" name="completed" onChange={handleChange} value={selectedTask&&selectedTask.completed} />
-            <br /> 
-            <TextField className={styles.inputMaterial} label="Created" name="createdAt" onChange={handleChange} value={selectedTask&&selectedTask.createdAt}  />
-            <br /> 
-            <TextField className={styles.inputMaterial} label="Updated" name="updatedAt" onChange={handleChange} value={selectedTask&&selectedTask.updatedAt}   />
+            <TextField className={styles.inputMaterial} label="Completed" name="completed" onChange={handleChange} value={selectedTask && selectedTask.completed} />
+            <br />
+            <TextField className={styles.inputMaterial} label="Created" name="createdAt" onChange={handleChange} value={selectedTask && selectedTask.createdAt} />
+            <br />
+            <TextField className={styles.inputMaterial} label="Updated" name="updatedAt" onChange={handleChange} value={selectedTask && selectedTask.updatedAt} />
             <br /><br />
             <div align="right">
-                <Button color="primary" onClick={() => peticionPut ()}>EDIT</Button>
+                <Button color="primary" onClick={() => peticionPut()}>EDIT</Button>
                 <Button onClick={() => abrirCerrarModalEditar()}>Cancel</Button>
             </div>
+        </div>
+    )
+    const bodyEliminar = (
+        <div className={styles.modal}>
+            <p>Are you sure you want to delete this task <b>{selectedTask && selectedTask.description}</b>? </p>
+            <div align="right">
+                <Button color="secondary" onClick={() => peticionDelete()}>Yes</Button>
+                <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
+
+            </div>
+
         </div>
     )
 
@@ -168,14 +220,14 @@ function Todo() {
                     {
                         icon: 'edit',
                         tooltip: 'edit task',
-                        onClick: (event, rowData) => selectTask(rowData,"Edit")
+                        onClick: (event, rowData) => selectTask(rowData, "Edit")
 
 
                     },
                     {
                         icon: 'delete',
                         tooltip: 'Delete task',
-                        onClick: (event, rowData) => alert("Ready to delete")
+                        onClick: (event, rowData) => selectTask(rowData, "Delete")
                     }
                 ]}
                 options={{
@@ -193,6 +245,13 @@ function Todo() {
                 onClose={abrirCerrarModalEditar}>
                 {bodyEditar}
             </Modal>
+
+            <Modal
+                open={modalEliminar}
+                onClose={abrirCerrarModalEliminar}>
+                {bodyEliminar}
+            </Modal>
+
         </div >
 
     )
