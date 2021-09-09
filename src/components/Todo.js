@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import MaterialTable from 'material-table'
 import axios from 'axios'
-import { getToken, removeUserSession, setUserSession } from '../Utils/Common';
+import { getToken } from '../Utils/Common';
 import { Modal, TextField, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -15,6 +15,7 @@ const columns = [
 ];
 
 const taskUrl = "https://api-nodejs-todolist.herokuapp.com/task"
+const putUrl = "https://api-nodejs-todolist.herokuapp.com/task/"
 const useStyles = makeStyles((theme) => ({
     modal: {
         position: 'absolute',
@@ -43,6 +44,7 @@ function Todo() {
     const [data, setData] = useState([]);
     const styles = useStyles();
     const [modalInsertar, setModalInsertar] = useState(false);
+    const [modalEditar, setModalEditar] = useState(false);
     const [selectedTask, setSelectedTask] = useState({
         description: "",
         completed: "",
@@ -62,8 +64,31 @@ function Todo() {
         setModalInsertar(!modalInsertar)
     }
 
+    const abrirCerrarModalEditar = () => {
+        setModalEditar(!modalEditar)
+    }
+
+    const selectTask=(description, caso)=>{
+        setSelectedTask(description);
+        (caso==="Edit")&&abrirCerrarModalEditar()
+    }
+
     const peticionPost=async()=>{
         await axios.post(taskUrl, selectedTask, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response=>{
+            setData(data.concat(response.data))
+            abrirCerrarModalInsertar();
+        }).catch(error=>{
+            console.log(error);
+        })
+    }
+
+    const peticionPut=async()=>{
+        await axios.put(putUrl, selectedTask._id, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -104,11 +129,30 @@ function Todo() {
             <TextField className={styles.inputMaterial} label="Updated" name="updatedAt" onChange={handleChange} />
             <br /><br />
             <div align="right">
-                <Button color="primary" onClick={() => peticionPost()}>ADD</Button>
+                <Button color="primary" onClick={()=>peticionPost()} >ADD</Button>
                 <Button onClick={() => abrirCerrarModalInsertar()}>Cancel</Button>
             </div>
         </div>
     )
+
+    const bodyEditar = (
+        <div className={styles.modal}>
+            <h3>Edit Task</h3>
+            <TextField className={styles.inputMaterial} label="Description" name="description" onChange={handleChange} value={selectedTask&&selectedTask.description} />
+            <br />
+            <TextField className={styles.inputMaterial} label="Completed" name="completed" onChange={handleChange} value={selectedTask&&selectedTask.completed} />
+            <br /> 
+            <TextField className={styles.inputMaterial} label="Created" name="createdAt" onChange={handleChange} value={selectedTask&&selectedTask.createdAt}  />
+            <br /> 
+            <TextField className={styles.inputMaterial} label="Updated" name="updatedAt" onChange={handleChange} value={selectedTask&&selectedTask.updatedAt}   />
+            <br /><br />
+            <div align="right">
+                <Button color="primary" onClick={() => peticionPut ()}>EDIT</Button>
+                <Button onClick={() => abrirCerrarModalEditar()}>Cancel</Button>
+            </div>
+        </div>
+    )
+
     return (
         <div>
             <br />
@@ -124,7 +168,7 @@ function Todo() {
                     {
                         icon: 'edit',
                         tooltip: 'edit task',
-                        onClick: (event, rowData) => alert("Ready to edit")
+                        onClick: (event, rowData) => selectTask(rowData,"Edit")
 
 
                     },
@@ -142,6 +186,12 @@ function Todo() {
                 open={modalInsertar}
                 onClose={abrirCerrarModalInsertar}>
                 {bodyInsertar}
+            </Modal>
+
+            <Modal
+                open={modalEditar}
+                onClose={abrirCerrarModalEditar}>
+                {bodyEditar}
             </Modal>
         </div >
 

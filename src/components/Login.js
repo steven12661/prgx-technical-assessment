@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { setUserSession } from '../Utils/Common';
 import { Form, Button } from 'react-bootstrap'
-import SignUp from "./SignUp";
 import axios from 'axios'
 import {
   BrowserRouter as Router,

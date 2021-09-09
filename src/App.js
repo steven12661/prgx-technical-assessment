@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Switch, Route, NavLink, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap'
+import { Container, Navbar} from 'react-bootstrap'
 
 import Login from './components/Login';
 import SignUp from './components/SignUp';
@@ -32,7 +32,7 @@ function App() {
       setUserSession(response.data.token, response.data.user);
       setAuthLoading(false);
     }).catch(error => {
-       removeUserSession();
+      //  removeUserSession();
       setAuthLoading(false);
     });
   }, []);
