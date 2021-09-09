@@ -1,11 +1,19 @@
-import React, { Component } from 'react'
+import React from 'react'
+import JSONPretty from 'react-json-pretty'
 
-export default class Profile extends Component {
-    render() {
-        return (
-            <div>
-                <h1>Profile</h1>
-            </div>
-        )
-    }
+
+function Profile(){
+    const user = sessionStorage.getItem('user')
+    
+    return (
+        <div>
+            <h1>Profile</h1>
+            
+            <JSONPretty data={user} />
+
+
+        </div>
+    )
 }
+
+export default Profile

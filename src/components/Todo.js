@@ -1,36 +1,121 @@
 import React, { useState, useEffect } from 'react'
 import MaterialTable from 'material-table'
+import axios from 'axios'
+import { getToken, removeUserSession, setUserSession } from '../Utils/Common';
+import { Modal, TextField, Button } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+
+const columns = [
+    // { field: 'check', title: 'Check'},
+    { field: 'description', title: 'Description' },
+    { field: 'completed', title: 'Completed' },
+    { field: 'created', title: 'Created at', type: 'date' },
+    { field: 'updated', title: 'Updated at' },
+
+];
+
+const getTaskUrl = "https://api-nodejs-todolist.herokuapp.com/task"
+const postTaskUrl = "https://api-nodejs-todolist.herokuapp.com/task"
+const useStyles = makeStyles((theme) => ({
+    modal: {
+        position: 'absolute',
+        width: 400,
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)'
+    },
+    iconos: {
+        cursor: 'pointer'
+    },
+    inputMaterial: {
+        width: '100%'
+    }
+}));
 function Todo() {
-    const columns = [
-        // { field: 'check', title: 'Check'},
-        { field: 'description', title: 'Description' },
-        { field: 'completed', title: 'Completed' },
-        { field: 'created', title: 'Created at', type: 'date' },
-        { field: 'updated', title: 'Updated at' },
 
-    ];
+    const token = getToken();
+        // if (!token) {
+    //     return;
+    // }
+    const [data, setData] = useState([]);
+    const styles = useStyles();
+    const [modalInsertar, setModalInsertar] = useState(false);
+    const [selectedTask, setSelectedTask] = useState({
+        description: "",
+        completed: "",
+        createdAt: "",
+        updatedAt: ""
+    })
 
-    const data = [
-        { description: 'test a', completed: 'false', created: 'Aug 07 2021', updated: 'Aug 08 2021' },
-        { description: 'test', completed: 'true', created: 'Aug 06 2021', updated: 'Aug 07 2021' },
-        { description: 'test', completed: 'true', created: 'Aug 05 2021', updated: 'Aug 06 2021' },
-        { description: 'test', completed: 'false', created: 'Aug 04 2021', updated: 'Aug 05 2021' }
+    const handleChange = e => {
+        const { name, value } = e.target;
+        setSelectedTask(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+        console.log(selectedTask);
+    }
+    const abrirCerrarModalInsertar = () => {
+        setModalInsertar(!modalInsertar)
+    }
 
-    ];
+    const peticionPost=async()=>{
+        await axios.post(postTaskUrl, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }, selectedTask)
+        .then(response=>{
+            setData(data.concat(response.data))
+            abrirCerrarModalInsertar();
+        }).catch(error=>{
+            console.log(error);
+        })
+    }
 
-    // const[tableData, setTableData] = useState([])
-    // useEffect(() => {
-    //     fetch("https://api-nodejs-todolist.herokuapp.com/task")
-    //     fetch("https://jsonplaceholder.typicode.com/posts")
+    const getPetition = async () => {
+        await axios.get(getTaskUrl, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                console.log(response.data)
+            })
+    }
+    useEffect(() => {
+        
+        getPetition();
+    }, [])
 
-    //     .then((data)=>data.json())
-    //     .then((data)=>setTableData(data))
-    //     .then((data)=>console.log(data))
-
-    // })
-
+    const bodyInsertar = (
+        <div className={styles.modal}>
+            <h3>Add new Task</h3>
+            <TextField className={styles.inputMaterial} label="Description" name="description" onChange={handleChange} />
+            <br />
+            <TextField className={styles.inputMaterial} label="Completed" name="completed" onChange={handleChange} />
+            <br />
+            <TextField className={styles.inputMaterial} label="Created" name="createdAt" onChange={handleChange} />
+            <br />
+            <TextField className={styles.inputMaterial} label="Updated" name="updatedAt" onChange={handleChange} />
+            <br /><br />
+            <div align="right">
+                <Button color="primary" onClick={() => peticionPost()}>ADD</Button>
+                <Button onClick={() => abrirCerrarModalInsertar()}>Cancel</Button>
+            </div>
+        </div>
+    )
     return (
         <div>
+            <br />
+            <Button onClick={() => abrirCerrarModalInsertar()}> Add Task </Button>
+            <br />
+            <br />
+
             <MaterialTable
                 columns={columns}
                 data={data}
@@ -41,7 +126,7 @@ function Todo() {
                         tooltip: 'edit task',
                         onClick: (event, rowData) => alert("Ready to edit")
 
-                                            
+
                     },
                     {
                         icon: 'delete',
@@ -53,7 +138,13 @@ function Todo() {
                     actionsColumnIndex: -1
                 }}
             />
+            <Modal
+                open={modalInsertar}
+                onClose={abrirCerrarModalInsertar}>
+                {bodyInsertar}
+            </Modal>
         </div >
+
     )
 
 }

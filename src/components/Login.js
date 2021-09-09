@@ -1,78 +1,88 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button } from "react-bootstrap";
-import { BrowserRouter as Router, Switch, Route, Link, useHistory } from "react-router-dom";
+import { setUserSession } from '../Utils/Common';
+
 import axios from 'axios'
 
 function Login(props) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const history = useHistory();
+
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const history = useHistory();
 
 
-   useEffect(() => {
-     if(sessionStorage.getItem('user'))
-     {
-       props.history.push("/todo")
-     }
-   }, )
+  //  useEffect(() => {
+  //    if(sessionStorage.getItem('user'))
+  //    {
+  //      props.history.push("/todo")
+  //    }
+  //  }, )
 
+  // async function login() {
+  //   let item = { email, password };
+  //   console.log(item);
+  //   let result = await fetch(
+  //     "https://api-nodejs-todolist.herokuapp.com/user/login",
+  //     {
+  //       method: "POST",
+  //       body: JSON.stringify(item),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     }
+  //   );
+  //   result = await result.json();
+  //   sessionStorage.setItem("user", JSON.stringify(result))
+  //   console.log("result: ", result);
+  // }
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const email = useFormInput('');
+  const password = useFormInput('');
+  
+  const handleLogin = () => {
 
-  async function login() {
-    let item = { email, password };
-    console.log(item);
-    let result = await fetch(
-      "https://api-nodejs-todolist.herokuapp.com/user/login",
-      {
-        method: "POST",
-        body: JSON.stringify(item),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    result = await result.json();
-    sessionStorage.setItem("user", JSON.stringify(result))
-    console.log("result: ", result);
+    setError(null);
+    setLoading(true);
+    axios.post('https://api-nodejs-todolist.herokuapp.com/user/login',{ email: email.value, password: password.value })
+    .then(response => {
+      setLoading(false);
+      setUserSession(response.data.token, response.data.user);
+      props.history.push('/todo');
+    }).catch(error => {
+      setLoading(false);
+      if (error.response.status === 401) setError(error.response.data.message);
+      else setError("Something went wrong. Please try again later.");
+    });
   }
 
   return (
-    <div className="col-sm-6 offset-sm-3">
-      <Form>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="example@email.com"
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-          />
-        </Form.Group>
-        <Link to="/todo">
-
-          <Button variant="success" onClick={login} type="submit">
-            LOGIN
-          </Button>{" "}
-        </Link>
-
-        <Link to="/signup">
-          <Button variant="success">
-            SIGN UP
-          </Button>
-        </Link>
-
-      </Form>
+    <div>
+      Login<br /><br />
+      <div>
+        email<br />
+        <input type="text" {...email} autoComplete="new-password" />
+      </div>
+      <div style={{ marginTop: 10 }}>
+        Password<br />
+        <input type="password" {...password} autoComplete="new-password" />
+      </div>
+      {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
+      <input type="button" value={loading ? 'Loading...' : 'Login'} onClick={handleLogin} disabled={loading} /><br />
     </div>
   );
+}
+
+const useFormInput = initialValue => {
+  const [value, setValue] = useState(initialValue);
+
+  const handleChange = e => {
+    setValue(e.target.value);
+  }
+  return {
+    value,
+    onChange: handleChange
+  }
 }
 
 export default Login;

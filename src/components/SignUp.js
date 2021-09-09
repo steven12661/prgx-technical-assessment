@@ -10,7 +10,7 @@ function SignUp() {
       {
         this.history.push("/todo")
       }
-    }, )
+    },[])
 
 
   const [name, setName] = useState("");
