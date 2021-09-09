@@ -61,7 +61,7 @@ function SignUp() {
         </Form.Group>
 
         <Button variant="success" onClick={register}>
-          SIGN UP
+          Sign Up
         </Button>
       </Form>
     </div>
