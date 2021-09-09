@@ -6,11 +6,11 @@ import { Modal, TextField, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 const columns = [
-    // { field: 'check', title: 'Check'},
+    //  { field: 'check', title: 'Check', type: 'Checkbox'},
     { field: 'description', title: 'Description' },
     { field: 'completed', title: 'Completed' },
-    { field: 'created', title: 'Created at', type: 'date' },
-    { field: 'updated', title: 'Updated at' },
+    { field: 'createdAt', title: 'Created at', type: 'date' },
+    { field: 'updatedAt', title: 'Updated at' },
 
 ];
 
@@ -49,7 +49,7 @@ function Todo() {
         createdAt: "",
         updatedAt: ""
     })
-
+    const [taskList, setTaskList] = useState([]);
     const handleChange = e => {
         const { name, value } = e.target;
         setSelectedTask(prevState => ({
@@ -76,19 +76,20 @@ function Todo() {
         })
     }
 
-    const getPetition = async () => {
+    const peticionGet = async () => {
         await axios.get(taskUrl, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
             .then(response => {
-                console.log(response.data)
+                setTaskList(response.data)
+                console.log("Tasklist:",taskList.data)
             })
     }
     useEffect(() => {
-        
-        getPetition();
+        setTaskList([])
+        peticionGet();
     }, [])
 
     const bodyInsertar = (
@@ -117,7 +118,7 @@ function Todo() {
 
             <MaterialTable
                 columns={columns}
-                data={data}
+                data={taskList.data}
                 title="Actions"
                 actions={[
                     {
