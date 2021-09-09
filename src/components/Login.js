@@ -5,36 +5,6 @@ import axios from 'axios'
 
 function Login(props) {
 
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const history = useHistory();
-
-
-  //  useEffect(() => {
-  //    if(sessionStorage.getItem('user'))
-  //    {
-  //      props.history.push("/todo")
-  //    }
-  //  }, )
-
-  // async function login() {
-  //   let item = { email, password };
-  //   console.log(item);
-  //   let result = await fetch(
-  //     "https://api-nodejs-todolist.herokuapp.com/user/login",
-  //     {
-  //       method: "POST",
-  //       body: JSON.stringify(item),
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     }
-  //   );
-  //   result = await result.json();
-  //   sessionStorage.setItem("user", JSON.stringify(result))
-  //   console.log("result: ", result);
-  // }
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const email = useFormInput('');
@@ -69,6 +39,7 @@ function Login(props) {
       </div>
       {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
       <input type="button" value={loading ? 'Loading...' : 'Login'} onClick={handleLogin} disabled={loading} /><br />
+    
     </div>
   );
 }
