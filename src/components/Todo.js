@@ -14,8 +14,7 @@ const columns = [
 
 ];
 
-const getTaskUrl = "https://api-nodejs-todolist.herokuapp.com/task"
-const postTaskUrl = "https://api-nodejs-todolist.herokuapp.com/task"
+const taskUrl = "https://api-nodejs-todolist.herokuapp.com/task"
 const useStyles = makeStyles((theme) => ({
     modal: {
         position: 'absolute',
@@ -64,11 +63,11 @@ function Todo() {
     }
 
     const peticionPost=async()=>{
-        await axios.post(postTaskUrl, {
+        await axios.post(taskUrl, selectedTask, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
-        }, selectedTask)
+        })
         .then(response=>{
             setData(data.concat(response.data))
             abrirCerrarModalInsertar();
@@ -78,7 +77,7 @@ function Todo() {
     }
 
     const getPetition = async () => {
-        await axios.get(getTaskUrl, {
+        await axios.get(taskUrl, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
