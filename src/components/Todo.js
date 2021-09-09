@@ -163,7 +163,7 @@ function Todo() {
             <MaterialTable
                 columns={columns}
                 data={taskList.data}
-                title="Actions"
+                title="Tasks"
                 actions={[
                     {
                         icon: 'edit',
