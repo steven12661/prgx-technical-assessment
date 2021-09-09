@@ -16,7 +16,7 @@ import Todo from './components/Todo';
 function App() {
   const [authLoading, setAuthLoading] = useState(true);
   const history = useHistory();
-
+  const logOutUrl = "https://api-nodejs-todolist.herokuapp.com/user/logout"
   // function logOut() {
   //   axios.delete("https://api-nodejs-todolist.herokuapp.com/user/logout" , {withCredentials: true})
   // }
