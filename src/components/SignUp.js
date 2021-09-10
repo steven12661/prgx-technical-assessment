@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import {useHistory, withRouter} from 'react-router-dom'
-
+import '../index.css'
 function SignUp() {
   const history = useHistory();
 

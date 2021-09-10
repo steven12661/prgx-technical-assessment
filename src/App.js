@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Switch, Route, NavLink, useHistory } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, NavLink, useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Navbar} from 'react-bootstrap'
-
+import './index.css';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import Profile from './components/Profile';
@@ -12,8 +11,10 @@ import PrivateRoute from './Utils/PrivateRoute';
 import PublicRoute from './Utils/PublicRoute';
 import { getToken, removeUserSession, setUserSession } from './Utils/Common';
 import Todo from './components/Todo';
-
+// import Home from './components/Home'
+import NavbarComp from './components/NavbarComp';
 function App() {
+
   const [authLoading, setAuthLoading] = useState(true);
   const history = useHistory();
   const logOutUrl = "https://api-nodejs-todolist.herokuapp.com/user/logout"
@@ -23,10 +24,10 @@ function App() {
     if (!token) {
       return;
     }
-    
+
     axios.get('https://api-nodejs-todolist.herokuapp.com/user/me', {
       headers: {
-        'Authorization' : `Bearer ${token}`
+        'Authorization': `Bearer ${token}`
       }
     }).then(response => {
       setUserSession(response.data.token, response.data.user);
@@ -37,30 +38,24 @@ function App() {
     });
   }, []);
 
-   if (authLoading && getToken()) {
-     return <div className="content">Checking Authentication...</div>
-   }
+  if (authLoading && getToken()) {
+    return <div className="content">Checking Authentication...</div>
+  }
 
   return (
     <div className="App">
       <BrowserRouter>
         <div>
+          <NavbarComp />
+          <br />
 
-          <div className="header">
-            <Navbar bg="light" expand="lg">
-              <Container>
-                <NavLink exact activeClassName="active" to="/">Home</NavLink>{" - "}
-                <NavLink activeClassName="active" to="/todo">To-Do</NavLink> {" | "}
-                <NavLink activeClassName="active" to="/signup">SignUp</NavLink>{" - "}
-                <NavLink activeClassName="active" to="/login">Login</NavLink>{" | "}
-                <NavLink activeClassName="active" to="/profile">Profile</NavLink> {" - "}
-                <NavLink activeClassName="active" to="/profilesettings">ProfileSettings</NavLink> {" - "}
-                
-                <NavLink activeClassName="active" to="/profilesettings">Log out</NavLink>
-              </Container>
-            </Navbar>
+          {/* Home Component */}
+          {/* <div className="auth-wrapper">
+            <div className="auth-inner">
+              <Home />
+            </div>
+          </div> */}
 
-          </div>
           <div className="content">
             <Switch>
               <Route exact path="/" component={Todo} />
@@ -73,6 +68,7 @@ function App() {
           </div>
         </div>
       </BrowserRouter>
+
     </div>
   );
 }

@@ -33,8 +33,14 @@ const useStyles = makeStyles((theme) => ({
     },
     inputMaterial: {
         width: '100%'
-    }
+    },
 }));
+const mystyle = {
+
+    backgroundColor: "white",
+    margin: "10px",
+  };
+
 function Todo() {
 
     const token = getToken();
@@ -193,7 +199,7 @@ function Todo() {
     return (
         <div>
             <br />
-            <Button onClick={() => abrirCerrarModalInsertar()}> Add Task </Button>
+            <Button style={mystyle} onClick={() => abrirCerrarModalInsertar()}> Add Task </Button>
             <br />
             <br />
 
