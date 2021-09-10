@@ -6,7 +6,6 @@ import { Modal, TextField, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 const columns = [
-    //  { field: 'check', title: 'Check', type: 'Checkbox'},
     { field: 'description', title: 'Description' },
     { field: 'completed', title: 'Completed' },
     { field: 'createdAt', title: 'Created at', type: 'date' },
@@ -39,9 +38,7 @@ const useStyles = makeStyles((theme) => ({
 function Todo() {
 
     const token = getToken();
-    // if (!token) {
-    //     return;
-    // }
+
     const [data, setData] = useState([]);
     const styles = useStyles();
     const [modalInsertar, setModalInsertar] = useState(false);
@@ -107,18 +104,6 @@ function Todo() {
             }
         })
             .then(response => {
-                // var dataNueva = data;
-                // dataNueva.map(task => {
-                //     if (task._id === selectedTask._id) {
-                //         task.task = selectTask.task;
-
-                //         task.description = selectedTask.description;
-                //         task.completed = (selectedTask.completed.toLowerCase() === 'true');
-                //         task.createdAt = selectedTask.createdAt;
-                //         task.updatedAt = selectedTask.updatedAt;
-                //     }
-                // });
-                // setData(dataNueva);
                 abrirCerrarModalEditar();
                 peticionGet();
             }).catch(error => {
