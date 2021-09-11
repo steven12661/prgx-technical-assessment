@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Home from './components/Home';
 import NavbarComp from './components/NavbarComp';
 import Login from './components/Login'
-import Signup from './components/Signup'
+import Signup from './components/SignUp'
 import {
   BrowserRouter as Router,
   Switch,
