@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import MaterialTable from 'material-table'
 import axios from 'axios'
-import { getToken } from '../Utils/Common';
 import { Modal, TextField, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -16,6 +15,7 @@ const columns = [
 const taskUrl = "https://api-nodejs-todolist.herokuapp.com/task"
 const putUrl = "https://api-nodejs-todolist.herokuapp.com/task/"
 const deleteUrl = "https://api-nodejs-todolist.herokuapp.com/task/"
+
 const useStyles = makeStyles((theme) => ({
     modal: {
         position: 'absolute',
@@ -37,13 +37,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 const mystyle = {
 
-    backgroundColor: "white",
+    backgroundColor: "#1E90FF",
+    color: "white",
     margin: "10px",
-  };
+};
 
 function Todo() {
 
-    const token = getToken();
 
     const [data, setData] = useState([]);
     const styles = useStyles();
@@ -85,13 +85,13 @@ function Todo() {
             :
             abrirCerrarModalEliminar()
     }
-
+    const config = {
+        headers: {
+            'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+        }
+    }
     const peticionPost = async () => {
-        await axios.post(taskUrl, selectedTask, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
+        await axios.post(taskUrl, selectedTask, config)
             .then(response => {
                 setData(data.concat(response.data));
                 abrirCerrarModalInsertar();
@@ -104,11 +104,7 @@ function Todo() {
         var body = {
             'completed': (selectedTask.completed.toLowerCase() === 'true')
         }
-        await axios.put(putUrl + selectedTask._id, body, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
+        await axios.put(putUrl + selectedTask._id, body, config)
             .then(response => {
                 abrirCerrarModalEditar();
                 peticionGet();
@@ -119,12 +115,8 @@ function Todo() {
 
 
     const peticionDelete = async () => {
-        await axios.delete(deleteUrl + selectedTask._id, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-
-        }).then(response => {
+        await axios.delete(deleteUrl + selectedTask._id, config)
+            .then(response => {
                 setData(taskList.data.filter(task => task._id !== selectedTask._id));
                 abrirCerrarModalEliminar();
             }).catch(error => {
@@ -133,11 +125,7 @@ function Todo() {
     }
 
     const peticionGet = async () => {
-        await axios.get(taskUrl, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
+        await axios.get(taskUrl, config)
             .then(response => {
                 setTaskList(response.data)
                 console.log("Tasklist:", taskList.data)
@@ -169,7 +157,7 @@ function Todo() {
     const bodyEditar = (
         <div className={styles.modal}>
             <h3>Edit Task</h3><small>(you can only edit completed field)</small>
-            
+
             <TextField className={styles.inputMaterial} label="Description" name="description" onChange={handleChange} value={selectedTask && selectedTask.description} />
             <br />
             <TextField className={styles.inputMaterial} label="Completed" name="completed" onChange={handleChange} value={selectedTask && selectedTask.completed} />
