@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import axios from 'axios';
 
+// axios.defaults.baseURL ='https://api-nodejs-todolist.herokuapp.com/';
+// axios.defaults.headers.common['Authorization'] = 'Bearer ' + sessionStorage.getItem('token');
 ReactDOM.render(
   <React.StrictMode>
     <App />

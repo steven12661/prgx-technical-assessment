@@ -1,76 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Switch, Route, NavLink, useHistory, Link } from 'react-router-dom';
-import axios from 'axios';
+import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './index.css';
-import Login from './components/Login';
-import SignUp from './components/SignUp';
-import Profile from './components/Profile';
-import ProfileSettings from './components/ProfileSettings';
-import PrivateRoute from './Utils/PrivateRoute';
-import PublicRoute from './Utils/PublicRoute';
-import { getToken, removeUserSession, setUserSession } from './Utils/Common';
-import Todo from './components/Todo';
-// import Home from './components/Home'
+import Home from './components/Home';
 import NavbarComp from './components/NavbarComp';
-function App() {
+import Login from './components/Login'
+import Signup from './components/Signup'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  BrowserRouter
+} from "react-router-dom";
+import { Component } from 'react';
+import axios from 'axios';
+import Todo from './components/Todo';
 
-  const [authLoading, setAuthLoading] = useState(true);
-  const history = useHistory();
-  const logOutUrl = "https://api-nodejs-todolist.herokuapp.com/user/logout"
 
-  useEffect(() => {
-    const token = getToken();
-    if (!token) {
-      return;
-    }
-
-    axios.get('https://api-nodejs-todolist.herokuapp.com/user/me', {
-      headers: {
-        'Authorization': `Bearer ${token}`
+export default class App extends Component {
+  state = {};
+  componentDidMount =() => {
+      const config = {
+          headers: {
+              'Authorization' : 'Bearer '+sessionStorage.getItem('token')
+          }
       }
-    }).then(response => {
-      setUserSession(response.data.token, response.data.user);
-      setAuthLoading(false);
-    }).catch(error => {
-      //  removeUserSession();
-      setAuthLoading(false);
-    });
-  }, []);
-
-  if (authLoading && getToken()) {
-    return <div className="content">Checking Authentication...</div>
+       axios.get('https://api-nodejs-todolist.herokuapp.com/user/me', config)
+       .then(
+           res => {
+               this.setState({
+                   user: res.data
+               })
+               
+           },
+           err => {
+               console.log(err)
+           }
+       )
+       
   }
-
-  return (
-    <div className="App">
-      <BrowserRouter>
-        <div>
-          <NavbarComp />
-          <br />
-
-          {/* Home Component */}
-          {/* <div className="auth-wrapper">
-            <div className="auth-inner">
-              <Home />
-            </div>
-          </div> */}
-
-          <div className="content">
+  render(){
+    return(
+      <BrowserRouter > 
+      <div className="App">
+        <NavbarComp user={this.state.user} />
+        <div className="auth-wrapper">
+          <div className="auth-inner">
             <Switch>
-              <Route exact path="/" component={Todo} />
-              <PublicRoute path="/signup" component={SignUp} />
-              <PublicRoute path="/login" component={Login} />
-              <PrivateRoute path="/todo" component={Todo} />
-              <PrivateRoute path="/profile" component={Profile} />
-              <PrivateRoute path="/profilesettings" component={ProfileSettings} />
-            </Switch>
+              <Route exact path="/" component={()=><Home user={this.state.user} />} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/signup" component={Signup} />
+              <Route exact path="/todo" component={Todo} />
+
+              </Switch>
+            {/* <Home /> */}
           </div>
         </div>
+      </div>
       </BrowserRouter>
-
-    </div>
-  );
+    )
+  }
 }
-
-export default App;

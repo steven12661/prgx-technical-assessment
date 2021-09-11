@@ -1,71 +1,57 @@
-import React, { useState, useEffect } from "react";
-import { Form, Button } from "react-bootstrap";
-import {useHistory, withRouter} from 'react-router-dom'
-import '../index.css'
-function SignUp() {
-  const history = useHistory();
+import axios from 'axios';
+import React, { Component } from 'react'
+export default class Signup extends Component {
 
-    useEffect(() => {
-      if(sessionStorage.getItem('user'))
-      {
-        this.history.push("/todo")
-      }
-    },[])
+    handleSubmit = e =>{
+        e.preventDefault();
+        const data ={
+            name : this.name,
+            age : this.age,
+            email: this.email,
+            password : this.password
+        };
+        axios.post('https://api-nodejs-todolist.herokuapp.com/user/register', data)
+        .then(
+            res=> {
+                console.log(res)
+            }
+        ).catch(
+            err => {
+                console.log(err);
+            }
+        )
 
+    }
+    render() {
+        return (
+            <form onSubmit={this.handleSubmit}>
+                <h3>Sign Up</h3>
 
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  
-   async function register() {
-    let item={name, age, email, password}
-     console.log(item);
-     let result = await fetch("https://api-nodejs-todolist.herokuapp.com/user/register",{
-         method:'POST',
-         body: JSON.stringify(item),
-         headers:{
-            "Content-Type":"application/json"
-         } 
-
-     })
-     result = await result.json()
-     sessionStorage.setItem("user", JSON.stringify(result))
-     console.log("result: ", result)
-     history.push("/todo")
-     console.log(history.push("history pushed:","/todo"))
-  }
-
-  return (
-    <div className="col-sm-6 offset-sm-3">
-      <Form>
-        <Form.Group className="mb-3" controlId="formBasicName">
-          <Form.Label>Name</Form.Label>
-          <Form.Control type="name" value={name} onChange={(e)=>setName(e.target.value)} placeholder="Your name" />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="formBasicAge">
-          <Form.Label>Age</Form.Label>
-          <Form.Control type="number" value={age} onChange={(e)=>setAge(e.target.value)} placeholder="Age" />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="example@email.com" />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password" value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Password" />
-          <Form.Text className="text-muted">Must be 8 characters long</Form.Text>
-        </Form.Group>
-
-        <Button variant="success" onClick={register}>
-          Sign Up
-        </Button>
-      </Form>
-    </div>
-  );
+                <div className="form-group">
+                    <label>Name</label>
+                    <input type="text" className="form-control" placeholder="Your Name"
+                    onChange={e => this.name = e.target.value} />
+                </div>
+                <div className="form-group">
+                    <label>Age</label>
+                    <input type="number" className="form-control" placeholder="Your Age"
+                     onChange={e => this.age = e.target.value} />
+                </div>
+                <div className="form-group">
+                    <label>email</label>
+                    <input type="email" className="form-control" placeholder="email@example.com"
+                     onChange={e => this.email = e.target.value} />
+                </div>
+                <div className="form-group">
+                    <label>password</label>
+                    <input type="password" className="form-control" placeholder="Password"
+                     onChange={e => this.password = e.target.value} />
+                </div>
+                <br />
+                <div className="d-grid gap-2">
+                    <button className="btn btn-primary btn-block" size="lg">Sign Up</button>
+                </div>
+            </form>
+        )
+    }
 }
-
-export default SignUp;

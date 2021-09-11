@@ -1,68 +1,54 @@
-import React, { useState } from "react";
-import { setUserSession } from '../Utils/Common';
-import { Form, Button } from 'react-bootstrap'
-import axios from 'axios'
+import React, { Component } from 'react'
+import axios from 'axios';
 import {
-  BrowserRouter as Router,
-  Link,
-  
+    BrowserRouter as Router,
+    Link,
+
 } from "react-router-dom";
-function Login(props) {
+export default class Login extends Component {
+    handleSubmit = e =>{
+        e.preventDefault();
+        const data ={
+            email: this.email,
+            password : this.password
+        };
+        axios.post('https://api-nodejs-todolist.herokuapp.com/user/login', data)
+        .then(
+            res=> {
+                sessionStorage.setItem('token', res.data.token)
+                console.log("token was stored in sessionStorage")
+            }
+        ).catch(
+            err => {
+                console.log(err);
+            }
+        )
+    }
+    render() {
+        return (
+            <form onSubmit={this.handleSubmit}>
+                <h3>Log in</h3>
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const email = useFormInput('');
-  const password = useFormInput('');
 
-  const handleLogin = () => {
+                <div className="form-group">
+                    <label>email</label>
+                    <input type="email" className="form-control" placeholder="email@example.com"
+                        onChange={e => this.email = e.target.value} />
+                </div>
+                <div className="form-group">
+                    <label>password</label>
+                    <input type="password" className="form-control" placeholder="Password"
+                        onChange={e => this.password = e.target.value} />
+                </div>
+                <br />
+                <div className="d-grid gap-2">
+                    <Link to="/signup" className="d-grid gap-2">
+                        <button className="btn btn-primary btn-block" size="lg">Sign up</button>
+                    </Link>
+                    <button className="btn btn-primary btn-block" size="lg">Log In</button>
 
-    setError(null);
-    setLoading(true);
-    axios.post('https://api-nodejs-todolist.herokuapp.com/user/login', { email: email.value, password: password.value })
-      .then(response => {
-        setLoading(false);
-        setUserSession(response.data.token, response.data.user);
-        props.history.push('/todo');
-      }).catch(error => {
-        setLoading(false);
-        if (error.response.status === 401) setError(error.response.data.message);
-        else setError("Something went wrong. Please try again later.");
-      });
-  }
-
-  return (
-    <div>
-
-      <Form>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" {...email} autoComplete="new-password" placeholder="Enter email" />
-
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password"{...password} autoComplete="new-password" placeholder="Password" />
-        </Form.Group>
-        <Button variant="success" tvalue={loading ? 'Loading...' : 'Login'} onClick={handleLogin} disabled={loading}>Login</Button>{" "}
-        <Link to="/signup">
-        <Button variant="success">Sign up</Button>
-</Link>
-      </Form>
-    </div>
-  );
+                </div>
+            </form>
+        )
+    }
 }
-
-const useFormInput = initialValue => {
-  const [value, setValue] = useState(initialValue);
-
-  const handleChange = e => {
-    setValue(e.target.value);
-  }
-  return {
-    value,
-    onChange: handleChange
-  }
-}
-
-export default Login;
