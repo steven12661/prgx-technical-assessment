@@ -27,27 +27,32 @@ export default class App extends Component {
        axios.get('https://api-nodejs-todolist.herokuapp.com/user/me', config)
        .then(
            res => {
-               this.setState({
-                   user: res.data
-               })
-               
+            this.setUser(res.data);
            },
            err => {
                console.log(err)
            }
        )
        
-  }
+  };
+
+  setUser = user => {
+    this.setState({
+      user: user
+  });
+
+  };
+
   render(){
     return(
       <BrowserRouter > 
       <div className="App">
-        <NavbarComp user={this.state.user} />
+        <NavbarComp user={this.state.user} setUser={this.setUser} />
         <div className="auth-wrapper">
           <div className="auth-inner">
             <Switch>
               <Route exact path="/" component={()=><Home user={this.state.user} />} />
-              <Route exact path="/login" component={Login} />
+              <Route exact path="/login" component={() => <Login setUser={this.setUser} />}/>
               <Route exact path="/signup" component={Signup} />
               <Route exact path="/todo" component={Todo} />
 

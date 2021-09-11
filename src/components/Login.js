@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import axios from 'axios';
 import {
-    BrowserRouter as Router,
     Link,
-
+    Redirect
 } from "react-router-dom";
+
 export default class Login extends Component {
+    state ={}
     handleSubmit = e => {
         e.preventDefault();
         const data = {
@@ -17,6 +18,11 @@ export default class Login extends Component {
                 res => {
                     sessionStorage.setItem('token', res.data.token)
                     console.log("token was stored in sessionStorage")
+
+                    this.setState({
+                        loggedIn: true
+                    });
+                    this.props.setUser(res.data.user);
                 }
             ).catch(
                 err => {
@@ -25,6 +31,11 @@ export default class Login extends Component {
             )
     }
     render() {
+
+        if(this.state.loggedIn){
+            return <Redirect to={'/'} />
+        }
+        
         return (
             <form onSubmit={this.handleSubmit}>
                 <h3>Log in</h3>

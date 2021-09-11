@@ -1,6 +1,38 @@
+import axios from 'axios';
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+
+
 export default class NavbarComp extends Component {
+    
+
+    handleLogout = () => {
+
+        // const config = {
+        //     headers: {
+        //         'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+        //     }
+        // }
+
+        // axios.post('https://api-nodejs-todolist.herokuapp.com/user/logout',config)
+        // .then(
+        //     res=> {
+        //         console.log(res)
+        //         console.log("Logged out corretly")
+        //     }
+        // ).catch(
+        //     err => {
+        //         console.log(err);
+        //         console.log("Error. Token:"+sessionStorage.getItem('token'));
+        //     }
+        // )
+        sessionStorage.clear();
+        this.props.setUser(null);
+        console.log("Logged out ")
+    };
+    
+
+
     render() {
         let buttons;
         if (this.props.user) {
@@ -10,7 +42,7 @@ export default class NavbarComp extends Component {
                         <Link className="nav-link" to={'/todo'}>To-Do</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to={'/'} onClick={() => sessionStorage.clear()}>Logout</Link>
+                        <Link className="nav-link" to={'/'} onClick={this.handleLogout}>Logout</Link>
                     </li>
                 </ul>
             )
