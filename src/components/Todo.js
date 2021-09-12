@@ -3,7 +3,6 @@ import MaterialTable from 'material-table'
 import axios from 'axios'
 import { Modal, TextField, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-
 const columns = [
     { field: 'description', title: 'Description' },
     { field: 'completed', title: 'Completed' },
@@ -35,8 +34,7 @@ const useStyles = makeStyles((theme) => ({
         width: '100%'
     },
 }));
-const mystyle = {
-
+const buttonStyle = {
     backgroundColor: "#1E90FF",
     color: "white",
     margin: "10px",
@@ -56,7 +54,7 @@ function Todo() {
         completed: "",
         createdAt: "",
         updatedAt: "",
-        _id: ""
+        // _id: ""
     })
     const [taskList, setTaskList] = useState([]);
     const handleChange = e => {
@@ -156,15 +154,16 @@ function Todo() {
 
     const bodyEditar = (
         <div className={styles.modal}>
-            <h3>Edit Task</h3><small>(you can only edit completed field)</small>
+            <h3>Edit Task</h3>
+            <small>Change the status of this task</small> <br/>
 
-            <TextField className={styles.inputMaterial} label="Description" name="description" onChange={handleChange} value={selectedTask && selectedTask.description} />
+            {/* <TextField className={styles.inputMaterial} label="Description" name="description" onChange={handleChange} value={selectedTask && selectedTask.description} /> */}
             <br />
             <TextField className={styles.inputMaterial} label="Completed" name="completed" onChange={handleChange} value={selectedTask && selectedTask.completed} />
             <br />
-            <TextField className={styles.inputMaterial} label="Created" name="createdAt" onChange={handleChange} value={selectedTask && selectedTask.createdAt} />
+            {/* <TextField className={styles.inputMaterial} label="Created" name="createdAt" onChange={handleChange} value={selectedTask && selectedTask.createdAt} /> */}
             <br />
-            <TextField className={styles.inputMaterial} label="Updated" name="updatedAt" onChange={handleChange} value={selectedTask && selectedTask.updatedAt} />
+            {/* <TextField className={styles.inputMaterial} label="Updated" name="updatedAt" onChange={handleChange} value={selectedTask && selectedTask.updatedAt} /> */}
             <br /><br />
             <div align="right">
                 <Button color="primary" onClick={() => peticionPut()}>EDIT</Button>
@@ -185,9 +184,9 @@ function Todo() {
     )
 
     return (
-        <div>
+        <div className="auth-wrapper-table auth-inner-table table--size">
             <br />
-            <Button style={mystyle} onClick={() => abrirCerrarModalInsertar()}> Add Task </Button>
+            <Button style={buttonStyle} onClick={() => abrirCerrarModalInsertar()}> Add Task </Button>
             <br />
             <br />
 
@@ -198,7 +197,7 @@ function Todo() {
                 actions={[
                     {
                         icon: 'edit',
-                        tooltip: 'edit task',
+                        tooltip: 'Edit task status',
                         onClick: (event, rowData) => selectTask(rowData, "Edit")
 
 
