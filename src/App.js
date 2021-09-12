@@ -55,9 +55,7 @@ export default class App extends Component {
               <Route exact path="/login" component={() => <Login setUser={this.setUser} />}/>
               <Route exact path="/signup" component={Signup} />
               <Route exact path="/todo" component={Todo} />
-
-              </Switch>
-            {/* <Home /> */}
+            </Switch>
           </div>
         </div>
       </div>

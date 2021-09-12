@@ -7,31 +7,31 @@ export default class NavbarComp extends Component {
     
 
     handleLogout = () => {
+/*
+        const config = {
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+            }
+        }
 
-        // const config = {
-        //     headers: {
-        //         'Authorization': 'Bearer ' + sessionStorage.getItem('token')
-        //     }
-        // }
-
-        // axios.post('https://api-nodejs-todolist.herokuapp.com/user/logout',config)
-        // .then(
-        //     res=> {
-        //         console.log(res)
-        //         console.log("Logged out corretly")
-        //     }
-        // ).catch(
-        //     err => {
-        //         console.log(err);
-        //         console.log("Error. Token:"+sessionStorage.getItem('token'));
-        //     }
-        // )
+        axios.post('https://api-nodejs-todolist.herokuapp.com/user/logout',config)
+        .then(
+            res=> {
+                console.log(res)
+                console.log("Logged out corretly")
+            }
+        ).catch(
+            err => {
+                console.log(err);
+                console.log("Error. Token:"+sessionStorage.getItem('token'));
+            }
+        )
+*/ 
         sessionStorage.clear();
         this.props.setUser(null);
         console.log("Logged out ")
     };
     
-
 
     render() {
         let buttons;
