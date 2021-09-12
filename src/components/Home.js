@@ -7,8 +7,8 @@ export default class Home extends Component {
         if (this.props.user) {
             return (
                 <div>
-                    <h2>Hi, {this.props.user.name} </h2>
-
+                    <h3>Hi, {this.props.user.name} </h3>
+                    <br />
                     <Link to="/todo" className="d-grid gap-2">
                         <button className="btn btn-primary btn-block" size="lg">To-Do List</button>
                     </Link>

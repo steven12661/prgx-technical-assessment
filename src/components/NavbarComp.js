@@ -1,37 +1,35 @@
 import axios from 'axios';
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-
+import { NavDropdown } from 'react-bootstrap';
+const config = {
+    headers: {
+        'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+    }
+}
 
 export default class NavbarComp extends Component {
-    
+
 
     handleLogout = () => {
-/*
-        const config = {
-            headers: {
-                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
-            }
-        }
 
-        axios.post('https://api-nodejs-todolist.herokuapp.com/user/logout',config)
-        .then(
-            res=> {
-                console.log(res)
-                console.log("Logged out corretly")
-            }
-        ).catch(
-            err => {
-                console.log(err);
-                console.log("Error. Token:"+sessionStorage.getItem('token'));
-            }
-        )
-*/ 
+        axios.post('https://api-nodejs-todolist.herokuapp.com/user/logout', config)
+            .then(
+                res => {
+                    console.log(res)
+                    console.log("Logged out corretly")
+                }
+            ).catch(
+                err => {
+                    console.log(err);
+                    console.log("Error. Token:" + sessionStorage.getItem('token'));
+                }
+            )
         sessionStorage.clear();
         this.props.setUser(null);
-        console.log("Logged out ")
+        console.warn("Logged out locally")
     };
-    
+
 
     render() {
         let buttons;
@@ -41,9 +39,12 @@ export default class NavbarComp extends Component {
                     <li className="nav-item">
                         <Link className="nav-link" to={'/todo'}>To-Do</Link>
                     </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to={'/'} onClick={this.handleLogout}>Logout</Link>
-                    </li>
+                    <NavDropdown title="Account Settings" id="basic-nav-dropdown">
+                        <NavDropdown.Item as={Link} to={"/profile"}>Profile</NavDropdown.Item>
+                        <NavDropdown.Item as={Link} to={"/profilesettings"} disabled>Profile Settings</NavDropdown.Item>
+                        <NavDropdown.Divider />
+                        <NavDropdown.Item as={Link} to={"/"} onClick={this.handleLogout} >Logout</NavDropdown.Item>
+                    </NavDropdown>
                 </ul>
             )
 
