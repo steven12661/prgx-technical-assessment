@@ -5,16 +5,14 @@ import NavbarComp from './components/NavbarComp';
 import Login from './components/Login'
 import Signup from './components/SignUp'
 import {
-  BrowserRouter as Router,
+  BrowserRouter,
   Switch,
   Route,
-  Link,
-  BrowserRouter
 } from "react-router-dom";
 import { Component } from 'react';
 import axios from 'axios';
 import Todo from './components/Todo';
-
+import Profile from './components/Profile';
 
 export default class App extends Component {
   state = {};
@@ -55,6 +53,7 @@ export default class App extends Component {
               <Route exact path="/login" component={() => <Login setUser={this.setUser} />}/>
               <Route exact path="/signup" component={Signup} />
               <Route exact path="/todo" component={Todo} />
+              <Route exact path="/profile" component={()=><Profile user={this.state.user} />} />
             </Switch>
           </div>
         </div>

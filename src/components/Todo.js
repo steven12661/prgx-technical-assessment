@@ -45,9 +45,9 @@ function Todo() {
 
     const [data, setData] = useState([]);
     const styles = useStyles();
-    const [modalInsertar, setModalInsertar] = useState(false);
-    const [modalEditar, setModalEditar] = useState(false);
-    const [modalEliminar, setModalEliminar] = useState(false);
+    const [insertModal, setinsertModal] = useState(false);
+    const [editModal, seteditModal] = useState(false);
+    const [deleteModal, setdeleteModal] = useState(false);
 
     const [selectedTask, setSelectedTask] = useState({
         description: "",
@@ -65,34 +65,34 @@ function Todo() {
         }));
         console.log(selectedTask);
     }
-    const abrirCerrarModalInsertar = () => {
-        setModalInsertar(!modalInsertar)
+    const openCloseinsertModal = () => {
+        setinsertModal(!insertModal)
     }
 
-    const abrirCerrarModalEditar = () => {
-        setModalEditar(!modalEditar)
+    const openCloseeditModal = () => {
+        seteditModal(!editModal)
     }
 
-    const abrirCerrarModalEliminar = () => {
-        setModalEliminar(!modalEliminar);
+    const openClosedeleteModal = () => {
+        setdeleteModal(!deleteModal);
     }
 
     const selectTask = (task, caso) => {
         setSelectedTask(task);
-        (caso === "Edit") ? abrirCerrarModalEditar()
+        (caso === "Edit") ? openCloseeditModal()
             :
-            abrirCerrarModalEliminar()
+            openClosedeleteModal()
     }
     const config = {
         headers: {
             'Authorization': 'Bearer ' + sessionStorage.getItem('token')
         }
     }
-    const peticionPost = async () => {
+    const postMethod = async () => {
         await axios.post(taskUrl, selectedTask, config)
             .then(response => {
                 setData(data.concat(response.data));
-                abrirCerrarModalInsertar();
+                openCloseinsertModal();
             }).catch(error => {
                 console.log(error);
             })
@@ -104,25 +104,25 @@ function Todo() {
         }
         await axios.put(putUrl + selectedTask._id, body, config)
             .then(response => {
-                abrirCerrarModalEditar();
-                peticionGet();
+                openCloseeditModal();
+                getMethod();
             }).catch(error => {
                 console.log(error);
             })
     }
 
 
-    const peticionDelete = async () => {
+    const deleteMethod = async () => {
         await axios.delete(deleteUrl + selectedTask._id, config)
             .then(response => {
                 setData(taskList.data.filter(task => task._id !== selectedTask._id));
-                abrirCerrarModalEliminar();
+                openClosedeleteModal();
             }).catch(error => {
                 console.log(error);
             })
     }
 
-    const peticionGet = async () => {
+    const getMethod = async () => {
         await axios.get(taskUrl, config)
             .then(response => {
                 setTaskList(response.data)
@@ -131,7 +131,7 @@ function Todo() {
     }
     useEffect(() => {
         setTaskList([])
-        peticionGet();
+        getMethod();
     }, [])
 
     const bodyInsertar = (
@@ -146,8 +146,8 @@ function Todo() {
             <TextField className={styles.inputMaterial} label="Updated" name="updatedAt" onChange={handleChange} />
             <br /><br />
             <div align="right">
-                <Button color="primary" onClick={() => peticionPost()} >ADD</Button>
-                <Button onClick={() => abrirCerrarModalInsertar()}>Cancel</Button>
+                <Button color="primary" onClick={() => postMethod()} >ADD</Button>
+                <Button onClick={() => openCloseinsertModal()}>Cancel</Button>
             </div>
         </div>
     )
@@ -167,7 +167,7 @@ function Todo() {
             <br /><br />
             <div align="right">
                 <Button color="primary" onClick={() => peticionPut()}>EDIT</Button>
-                <Button onClick={() => abrirCerrarModalEditar()}>Cancel</Button>
+                <Button onClick={() => openCloseeditModal()}>Cancel</Button>
             </div>
         </div>
     )
@@ -175,8 +175,8 @@ function Todo() {
         <div className={styles.modal}>
             <p>Are you sure you want to delete this task <b>{selectedTask && selectedTask.description}</b>? </p>
             <div align="right">
-                <Button color="secondary" onClick={() => peticionDelete()}>Yes</Button>
-                <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
+                <Button color="secondary" onClick={() => deleteMethod()}>Yes</Button>
+                <Button onClick={() => openClosedeleteModal()}>No</Button>
 
             </div>
 
@@ -186,7 +186,7 @@ function Todo() {
     return (
         <div className="auth-wrapper-table auth-inner-table table--size">
             <br />
-            <Button style={buttonStyle} onClick={() => abrirCerrarModalInsertar()}> Add Task </Button>
+            <Button style={buttonStyle} onClick={() => openCloseinsertModal()}> Add Task </Button>
             <br />
             <br />
 
@@ -213,20 +213,20 @@ function Todo() {
                 }}
             />
             <Modal
-                open={modalInsertar}
-                onClose={abrirCerrarModalInsertar}>
+                open={insertModal}
+                onClose={openCloseinsertModal}>
                 {bodyInsertar}
             </Modal>
 
             <Modal
-                open={modalEditar}
-                onClose={abrirCerrarModalEditar}>
+                open={editModal}
+                onClose={openCloseeditModal}>
                 {bodyEditar}
             </Modal>
 
             <Modal
-                open={modalEliminar}
-                onClose={abrirCerrarModalEliminar}>
+                open={deleteModal}
+                onClose={openClosedeleteModal}>
                 {bodyEliminar}
             </Modal>
 
