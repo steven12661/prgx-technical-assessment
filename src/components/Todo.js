@@ -45,9 +45,9 @@ function Todo() {
 
     const [data, setData] = useState([]);
     const styles = useStyles();
-    const [insertModal, setinsertModal] = useState(false);
-    const [editModal, seteditModal] = useState(false);
-    const [deleteModal, setdeleteModal] = useState(false);
+    const [insertModal, setInsertModal] = useState(false);
+    const [editModal, setEditModal] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
 
     const [selectedTask, setSelectedTask] = useState({
         description: "",
@@ -66,15 +66,15 @@ function Todo() {
         console.log(selectedTask);
     }
     const openCloseinsertModal = () => {
-        setinsertModal(!insertModal)
+        setInsertModal(!insertModal)
     }
 
     const openCloseeditModal = () => {
-        seteditModal(!editModal)
+        setEditModal(!editModal)
     }
 
     const openClosedeleteModal = () => {
-        setdeleteModal(!deleteModal);
+        setDeleteModal(!deleteModal);
     }
 
     const selectTask = (task, caso) => {
