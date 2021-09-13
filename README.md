@@ -6,7 +6,7 @@ There's also a profile tab where you can see the users info.
 ## npm packages used
 | npm package| README |
 | ------ | ------ |
-| axios| [[axios - npm (npmjs.com)](https://www.npmjs.com/package/axios) |
+| axios| [axios - npm (npmjs.com)](https://www.npmjs.com/package/axios) |
 | React Bootstrap| [React-Bootstrap · React-Bootstrap Documentation](https://react-bootstrap.netlify.app/getting-started/introduction) |
 | React Router | [React Router: Declarative Routing for React.js](https://reactrouter.com/web/guides/quick-start) |
 | material-table| [material-table](https://material-table.com/#/docs/install) |
