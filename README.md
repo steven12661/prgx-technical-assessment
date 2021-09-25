@@ -1,6 +1,6 @@
 # To-Do List
 This is a [react app](https://github.com/facebook/create-react-app). project. 
-It has a Login, a Sign up component and also a data table with CRUD functions.  
+It has a Login, a Sign-up component that consume an endpoint API and a data table made with material-table with CRUD functions.  
 There's also a profile tab where you can see the users info. 
 
 ## npm packages used
